@@ -14,6 +14,8 @@ export class AgendamentoController implements IAgendamentoController {
       vaccinationSite: '',
       vaccinationDate: '',
       vaccinationHour: '',
+      dose: '',
+      birthday: '',
     };
   }
 }

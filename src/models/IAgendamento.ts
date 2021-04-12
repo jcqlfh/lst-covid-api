@@ -4,4 +4,6 @@ export interface IAgendamento {
   vaccinationSite: string;
   vaccinationDate: string;
   vaccinationHour: string;
+  dose: string;
+  birthday: string;
 }
