@@ -6,7 +6,7 @@ import { IAgendamentoController } from './controllers/IAgendamentoController';
 
 const app = express();
 
-var corsOptions = {
+const corsOptions = {
   origin: 'http://localhost:4200',
   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
