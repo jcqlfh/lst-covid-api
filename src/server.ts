@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import { myContainer } from '../inversify.config';
 import { TYPES } from '../types';
-import { IAgendamentoController } from './controllers/IAgendamentoController';
+import { ISchedulingController } from './controllers/ISchedulingController';
 
 const app = express();
 
@@ -12,12 +12,12 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-app.get('/agendamentos/:name', (req, res) =>
-  res.send(
-    myContainer
-      .get<IAgendamentoController>(TYPES.IAngendamentoController)
-      .getAgendamento(req.params.name)
-  )
+app.get('/scheduling/:name', (req, res) =>
+  myContainer
+    .get<ISchedulingController>(TYPES.ISchedulingController)
+    .getScheduling(req.params.name)
+    .then(schedules => res.send(schedules))
+    .catch(error => console.log(error))
 );
 
 const PORT = 5000;

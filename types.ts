@@ -1,6 +1,7 @@
 const TYPES = {
-  IAngendamentoController: Symbol.for('IAngendamentoController'),
+  ISchedulingController: Symbol.for('ISchedulingController'),
   IScrapperService: Symbol.for('IScrapperService'),
+  ISourceService: Symbol.for('ISourceService'),
 };
 
 export { TYPES };

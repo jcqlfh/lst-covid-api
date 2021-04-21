@@ -1,3 +1,5 @@
+import { IFileSource } from '../models/IFileSource';
+
 export interface IScrapperService {
-  refreshFiles: () => void;
+  refreshFiles: () => Promise<IFileSource>;
 }
