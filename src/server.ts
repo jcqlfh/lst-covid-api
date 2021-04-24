@@ -47,7 +47,7 @@ app.get('/source', (req, res) => {
   return res.status(200).json({ ok: sourceController.isUpdating() });
 });
 
-const PORT = 5000;
+const PORT = 80;
 app.listen(PORT, () => {
   console.log(`⚡️[server]: Server is running at https://localhost:${PORT}`);
 });
