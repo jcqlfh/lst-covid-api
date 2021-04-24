@@ -5,13 +5,26 @@ import { myContainer } from '../inversify.config';
 import { TYPES } from '../types';
 import { ISchedulingController } from './controllers/ISchedulingController';
 import { ISourceController } from './controllers/ISourceController';
+import { AddressInfo } from 'net';
 
 const app = express();
 
+const whitelist = [
+  'http://lstcovid.joze.cc',
+  'https://lstcovid.joze.cc',
+  'http://localhost:4200',
+];
 const corsOptions = {
-  origin: 'http://lstcovid.joze.cc',
-  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+  optionsSuccessStatus: 200,
+  origin(origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error(`Origin ${origin} not allowed by CORS`));
+    }
+  },
 };
+
 app.use(cors(corsOptions));
 
 const schedulingController = myContainer.get<ISchedulingController>(
@@ -43,11 +56,14 @@ app.post('/source', (req, res) => {
   return res.status(200).json({ ok: true });
 });
 
-app.get('/source', (req, res) => {
-  return res.status(200).json({ ok: sourceController.isUpdating() });
-});
+app.get('/source', (req, res) =>
+  res.status(200).json({ ok: sourceController.isUpdating() })
+);
 
-let PORT;
-app.listen(PORT || process.env.PORT, () => {
-  console.log(`⚡️[server]: Server is running at https://localhost:${PORT}`);
+const PORT = 5000;
+const server = app.listen(process.env.PORT || PORT, () => {
+  const address = server.address() as AddressInfo;
+  console.log(
+    `⚡️[server]: Server is running at ${address.address}:${address.port}`
+  );
 });

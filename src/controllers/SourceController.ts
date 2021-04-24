@@ -15,17 +15,19 @@ export class SourceController implements ISourceController {
   ) {}
 
   updateSource() {
-    this.sourceService.setUpdating(true);
-    this.scrapperService
-      .refreshFiles()
-      .then(source => {
-        this.sourceService.setSource(source);
-        this.sourceService.setUpdating(false);
-      })
-      .catch(error => {
-        console.error(error);
-        this.sourceService.setUpdating(false);
-      });
+    process.nextTick(() => {
+      this.sourceService.setUpdating(true);
+      this.scrapperService
+        .refreshFiles()
+        .then(source => {
+          this.sourceService.setSource(source);
+          this.sourceService.setUpdating(false);
+        })
+        .catch(error => {
+          console.error(error);
+          this.sourceService.setUpdating(false);
+        });
+    });
   }
 
   isUpdating() {
