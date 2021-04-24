@@ -18,7 +18,7 @@ export class SchedulingController implements ISchedulingController {
 
   public getScheduling(name: string): Promise<IScheduling[]> {
     console.log(name);
-    return this.scrapperService.refreshFiles().then(source =>
+    return Promise.resolve(
       this.sourceService.search(name).map(i => ({
         name,
         url: i.url,

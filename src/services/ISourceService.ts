@@ -5,4 +5,6 @@ export interface ISourceService {
   getSource: () => IFileSource;
   setSource: (source: IFileSource) => IFileSource;
   search: (value: string) => IMatch[];
+  isUpdating: () => boolean;
+  setUpdating: (isUpdating: boolean) => void;
 }

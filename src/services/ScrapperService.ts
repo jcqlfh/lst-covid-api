@@ -2,20 +2,14 @@ import axios, { AxiosResponse } from 'axios';
 import xml2js from 'xml2js';
 import hash from 'object-hash';
 import crawler from 'crawler-request';
-import { inject, injectable } from 'inversify';
+import { injectable } from 'inversify';
 import 'reflect-metadata';
-import { TYPES } from '../../types';
 import { IFileSource } from '../models/IFileSource';
 import { IScrapperService } from './IScrapperService';
-import { ISourceService } from './ISourceService';
 import { IFile } from '../models/IFile';
 
 @injectable()
 export class ScrapperService implements IScrapperService {
-  constructor(
-    @inject(TYPES.ISourceService)
-    private readonly sourceService: ISourceService
-  ) {}
   public refreshFiles(): Promise<IFileSource> {
     return axios
       .get(
@@ -23,9 +17,7 @@ export class ScrapperService implements IScrapperService {
       )
       .then(res =>
         this.processResult(res)
-          .then(result => {
-            return this.sourceService.setSource(result);
-          })
+          .then()
           .catch(error => {
             console.error(error);
             return Promise.resolve({ files: [], hash: '' } as IFileSource);
@@ -39,47 +31,47 @@ export class ScrapperService implements IScrapperService {
 
   private processResult(res: AxiosResponse): Promise<IFileSource> {
     return new Promise(resolve => {
-      const fileSource = this.sourceService.getSource();
       const parser = xml2js.parseString;
       const fileList: IFile[] = [];
       parser(res.data, (err, result) => {
         const hashValue = hash(
           result.feed.entry.map(entry => entry['gsx:pdf'][0])
         );
-        if (fileSource?.hash !== hashValue) {
-          resolve(
-            Promise.allSettled<IFile>(
-              result.feed.entry.map(pdf =>
-                this.getFile(pdf)
-                  .then()
-                  .catch(error => {
-                    console.error(error);
-                    return Promise.resolve({});
-                  })
-              )
+        resolve(
+          Promise.allSettled<IFile>(
+            result.feed.entry.map(pdf =>
+              this.getFile(pdf)
+                .then()
+                .catch(error => {
+                  console.error(error);
+                  return Promise.resolve({});
+                })
             )
-              .then(
-                files =>
-                  ({
-                    files: files
-                      .filter(file => file.status === 'fulfilled')
-                      .map((file: PromiseFulfilledResult<IFile>) => file.value),
-                    hash: hash(
-                      result.feed.entry.map(entry => entry['gsx:pdf'][0])
-                    ),
-                  } as IFileSource)
-              )
-              .catch(error => {
-                console.error(error);
-                return Promise.resolve({
-                  files: [],
-                  hash: '',
-                } as IFileSource);
-              })
-          );
-        }
+          )
+            .then(
+              files =>
+                ({
+                  files: files
+                    .filter(file => file.status === 'fulfilled')
+                    .map((file: PromiseFulfilledResult<IFile>) => file.value),
+                  hash: hash(
+                    result.feed.entry.map(entry => entry['gsx:pdf'][0])
+                  ),
+                } as IFileSource)
+            )
+            .catch(error => {
+              console.error(error);
+              return Promise.resolve({
+                files: [],
+                hash: '',
+              } as IFileSource);
+            })
+        );
       });
-      return resolve(fileSource);
+      return resolve({
+        files: [],
+        hash: '',
+      } as IFileSource);
     });
   }
 

@@ -12,6 +12,7 @@ import 'reflect-metadata';
 export class SourceService implements ISourceService {
   private fileSource!: IFileSource;
   private readonly index: elasticlunr.Index<IDocument>;
+  private updating = false;
 
   constructor() {
     this.index = elasticlunr(function () {
@@ -77,5 +78,13 @@ export class SourceService implements ISourceService {
       console.error('error on search', e);
     }
     return [];
+  }
+
+  isUpdating(): boolean {
+    return this.updating;
+  }
+
+  setUpdating(isUpdating: boolean) {
+    this.updating = isUpdating;
   }
 }
