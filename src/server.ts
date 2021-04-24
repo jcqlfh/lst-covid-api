@@ -19,7 +19,7 @@ const controller = myContainer.get<ISchedulingController>(
 
 app.get(
   '/scheduling/:name',
-  param('name').isLength({ min: 15 }),
+  param('name').isLength({ min: 10 }),
   (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

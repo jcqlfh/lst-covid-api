@@ -21,7 +21,6 @@
     "object-hash": "^2.1.1",
     "pdf2json": "^1.2.1",
     "reflect-metadata": "^0.1.13",
-    "whatwg-fetch": "^3.6.2",
     "xml2js": "^0.4.23"
   },
   "devDependencies": {
