@@ -20,9 +20,9 @@ export class SchedulingController implements ISchedulingController {
     console.log(name);
     return this.scrapperService.refreshFiles().then(source =>
       this.sourceService.search(name).map(i => ({
-        page: i.page,
+        name,
         url: i.url,
-        name: i.value,
+        text: i.value,
       }))
     );
   }

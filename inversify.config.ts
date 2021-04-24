@@ -14,7 +14,8 @@ myContainer
   .bind<ISchedulingController>(TYPES.ISchedulingController)
   .to(SchedulingController);
 myContainer.bind<IScrapperService>(TYPES.IScrapperService).to(ScrapperService);
-myContainer.bind<ISourceService>(TYPES.ISourceService).to(SourceService)
-  .inSingletonScope;
+myContainer
+  .bind<ISourceService>(TYPES.ISourceService)
+  .toConstantValue(new SourceService());
 
 export { myContainer };
