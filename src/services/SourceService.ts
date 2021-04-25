@@ -66,6 +66,7 @@ export class SourceService implements ISourceService {
           fields: {
             line: { bool: 'AND' },
           },
+          expand: true,
         })
         .map(i => {
           const document = this.index.documentStore.getDoc(i.ref);

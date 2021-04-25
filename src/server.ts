@@ -35,6 +35,8 @@ const sourceController = myContainer.get<ISourceController>(
   TYPES.ISourceController
 );
 
+app.get('/', (req, res) => res.status(200).json({ status: 'ok' }));
+
 app.get(
   '/scheduling/:name',
   param('name').isLength({ min: 10 }),
@@ -51,8 +53,8 @@ app.get(
   }
 );
 
-app.post('/source', (req, res) => {
-  sourceController.updateSource();
+app.post('/source', async (req, res) => {
+  await sourceController.updateSource();
   return res.status(200).json({ ok: true });
 });
 
@@ -60,10 +62,12 @@ app.get('/source', (req, res) =>
   res.status(200).json({ ok: sourceController.isUpdating() })
 );
 
-const PORT = 5000;
-const server = app.listen(process.env.PORT || PORT, () => {
+const PORT = Number(process.env.PORT) || 5000;
+const server = app.listen(PORT, () => {
   const address = server.address() as AddressInfo;
   console.log(
     `⚡️[server]: Server is running at ${address.address}:${address.port}`
   );
 });
+
+module.exports = server;
