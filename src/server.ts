@@ -39,7 +39,7 @@ app.get('/', (req, res) => res.status(200).json({ status: 'ok' }));
 
 app.get(
   '/scheduling/:name',
-  param('name').isLength({ min: 10 }),
+  param('name').trim().isLength({ min: 10 }),
   (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

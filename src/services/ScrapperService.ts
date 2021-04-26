@@ -87,19 +87,19 @@ export class ScrapperService implements IScrapperService {
         .then(response =>
           response.text
             .split('\n')
-            .filter(line =>
-              line.match(
-                '\\s*([A-Z ]+)\\s*([0-9-]{10})\\s*([A-Z. ]+)\\s*([0-9-]{10})\\s*([0-9:]{8})\\s*([0-9]{1})\\s*'
-              )
-            )
-            .map(line =>
-              line
+            .filter(line => {
+              return line.match(
+                '\\s*([a-zA-Z\u00C0-\u017F ]+)\\s*([0-9-]{10})\\s*([a-zA-Z\u00C0-\u017F. ]+)\\s*([0-9-/]{10})\\s*([0-9:h]{8})\\s*([0-9]{1})\\s*'
+              );
+            })
+            .map(line => {
+              return line
                 .match(
-                  '\\s*([A-Z ]+)\\s*([0-9-]{10})\\s*([A-Z. ]+)\\s*([0-9-]{10})\\s*([0-9:]{8})\\s*([0-9]{1})\\s*'
+                  '\\s*([a-zA-Z\u00C0-\u017F ]+)\\s*([0-9-]{10})\\s*([a-zA-Z\u00C0-\u017F. ]+)\\s*([0-9-/]{10})\\s*([0-9:h]{8})\\s*([0-9]{1})\\s*'
                 )
                 .slice(1, 7)
-                .join(';')
-            )
+                .join(';');
+            })
         )
         .then(content => ({ hash: hash(content), text: content, url } as IFile))
         .catch(err => {

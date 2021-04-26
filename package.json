@@ -17,6 +17,7 @@
     "elasticlunr": "^0.9.5",
     "express": "^4.17.1",
     "express-validator": "^6.10.0",
+    "fold-to-ascii": "^5.0.0",
     "inversify": "^5.0.5",
     "object-hash": "^2.1.1",
     "pdf2json": "^1.2.1",

@@ -17,6 +17,7 @@ export class SourceService implements ISourceService {
   constructor() {
     this.index = elasticlunr(function () {
       this.addField('line');
+      this.addField('trimmed');
       this.setRef('hash');
     });
   }
@@ -54,7 +55,12 @@ export class SourceService implements ISourceService {
   private addDocuments(file: IFile) {
     if (!!file && !!file.text) {
       file.text.forEach(line =>
-        this.index.addDoc({ line, url: file.url, hash: hash(line) })
+        this.index.addDoc({
+          line,
+          trimmed: line.replace(' ', ''),
+          url: file.url,
+          hash: hash(line),
+        })
       );
     }
   }

@@ -18,13 +18,19 @@ export class SchedulingController implements ISchedulingController {
 
   public getScheduling(name: string): Promise<IScheduling[]> {
     console.log(name);
-    return this.scrapperService.refreshFiles().then(source => {
-      this.sourceService.setSource(source);
-      return this.sourceService.search(name).map(i => ({
-        name,
-        url: i.url,
-        text: i.value,
-      }));
-    });
+    return this.scrapperService
+      .refreshFiles()
+      .then(source => {
+        this.sourceService.setSource(source);
+        return this.sourceService.search(name).map(i => ({
+          name,
+          url: i.url,
+          text: i.value,
+        }));
+      })
+      .catch(error => {
+        console.error(error);
+        return [];
+      });
   }
 }
