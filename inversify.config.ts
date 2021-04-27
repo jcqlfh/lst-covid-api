@@ -8,16 +8,11 @@ import { IScrapperService } from './src/services/IScrapperService';
 import { ScrapperService } from './src/services/ScrapperService';
 import { ISourceService } from './src/services/ISourceService';
 import { SourceService } from './src/services/SourceService';
-import { ISourceController } from './src/controllers/ISourceController';
-import { SourceController } from './src/controllers/SourceController';
 
 const myContainer = new Container();
 myContainer
   .bind<ISchedulingController>(TYPES.ISchedulingController)
   .to(SchedulingController);
-myContainer
-  .bind<ISourceController>(TYPES.ISourceController)
-  .to(SourceController);
 myContainer.bind<IScrapperService>(TYPES.IScrapperService).to(ScrapperService);
 myContainer
   .bind<ISourceService>(TYPES.ISourceService)

@@ -4,7 +4,6 @@ import { param, validationResult } from 'express-validator';
 import { myContainer } from '../inversify.config';
 import { TYPES } from '../types';
 import { ISchedulingController } from './controllers/ISchedulingController';
-import { ISourceController } from './controllers/ISourceController';
 import { AddressInfo } from 'net';
 
 const app = express();
@@ -31,10 +30,6 @@ const schedulingController = myContainer.get<ISchedulingController>(
   TYPES.ISchedulingController
 );
 
-const sourceController = myContainer.get<ISourceController>(
-  TYPES.ISourceController
-);
-
 app.get('/', (req, res) => res.status(200).json({ status: 'ok' }));
 
 app.get(
@@ -51,15 +46,6 @@ app.get(
       .then(schedules => res.send(schedules))
       .catch(error => res.status(500).json({ errors: error }));
   }
-);
-
-app.post('/source', async (req, res) => {
-  await sourceController.updateSource();
-  return res.status(200).json({ ok: true });
-});
-
-app.get('/source', (req, res) =>
-  res.status(200).json({ ok: sourceController.isUpdating() })
 );
 
 const PORT = Number(process.env.PORT) || 5000;

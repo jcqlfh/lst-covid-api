@@ -13,6 +13,7 @@ export class SourceService implements ISourceService {
   private fileSource!: IFileSource;
   private readonly index: elasticlunr.Index<IDocument>;
   private updating = false;
+  private updated: Date;
 
   constructor() {
     this.index = elasticlunr(function () {
@@ -22,12 +23,19 @@ export class SourceService implements ISourceService {
     });
   }
 
+  canUpdate() {
+    return (
+      !this.updated || new Date().getTime() - this.updated.getTime() > 3600000
+    );
+  }
+
   getSource() {
     return this.fileSource;
   }
 
   setSource(source: IFileSource) {
-    if (this.fileSource?.hash !== source.hash) {
+    if (source.hash !== '' && this.fileSource?.hash !== source.hash) {
+      this.updated = new Date();
       for (const file of source.files) {
         const sourceFile = this.fileSource?.files.find(f => f.url === file.url);
         if (!sourceFile) {

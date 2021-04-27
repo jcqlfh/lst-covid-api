@@ -11,23 +11,25 @@ import * as DateUtil from '../util/date.util';
 
 @injectable()
 export class ScrapperService implements IScrapperService {
-  public refreshFiles(): Promise<IFileSource> {
-    return axios
-      .get(
-        'https://spreadsheets.google.com/feeds/list/1IJBDu8dRGLkBgX72sRWKY6R9GfefsaDCXBd3Dz9PZNs/14/public/values'
-      )
-      .then(res =>
-        this.processResult(res)
-          .then()
+  public refreshFiles(canUpdate: boolean): Promise<IFileSource> {
+    return canUpdate
+      ? axios
+          .get(
+            'https://spreadsheets.google.com/feeds/list/1IJBDu8dRGLkBgX72sRWKY6R9GfefsaDCXBd3Dz9PZNs/14/public/values'
+          )
+          .then(res =>
+            this.processResult(res)
+              .then()
+              .catch(error => {
+                console.error(error);
+                return Promise.resolve({ files: [], hash: '' } as IFileSource);
+              })
+          )
           .catch(error => {
             console.error(error);
             return Promise.resolve({ files: [], hash: '' } as IFileSource);
           })
-      )
-      .catch(error => {
-        console.error(error);
-        return Promise.resolve({ files: [], hash: '' } as IFileSource);
-      });
+      : Promise.resolve({ files: [], hash: '' } as IFileSource);
   }
 
   private processResult(res: AxiosResponse): Promise<IFileSource> {
