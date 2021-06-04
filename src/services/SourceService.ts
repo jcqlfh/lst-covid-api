@@ -34,18 +34,22 @@ export class SourceService implements ISourceService {
   }
 
   setSource(source: IFileSource) {
-    if (source.hash !== '' && this.fileSource?.hash !== source.hash) {
+    if (source.hash !== '') {
       this.updated = new Date();
-      for (const file of source.files) {
-        const sourceFile = this.fileSource?.files.find(f => f.url === file.url);
-        if (!sourceFile) {
-          this.addDocuments(file);
-        } else if (sourceFile.hash !== file.hash) {
-          this.removeDocuments(sourceFile);
-          this.addDocuments(file);
+      if (this.fileSource?.hash !== source.hash) {
+        for (const file of source.files) {
+          const sourceFile = this.fileSource?.files.find(
+            f => f.url === file.url
+          );
+          if (!sourceFile) {
+            this.addDocuments(file);
+          } else if (sourceFile.hash !== file.hash) {
+            this.removeDocuments(sourceFile);
+            this.addDocuments(file);
+          }
         }
+        this.fileSource = source;
       }
-      this.fileSource = source;
     }
     return this.fileSource;
   }
